@@ -12,7 +12,7 @@ public class Monitor {
 	private final static Condition notEmpty1 = lock.newCondition();
 	private final static Condition notFull2 = lock.newCondition();
 	private final static Condition notEmpty2 = lock.newCondition();
-
+    private Politica polis = new Politica();
     private int contProd = 0;
     private int contCons=0;
     private PN pn = new PN();
@@ -110,17 +110,19 @@ public class Monitor {
     	//System.out.println(contProd);
     	lock.lock();
        contProd++;
-
-        if(idBuffer==1) {
+       int decision = polis.prioridad(buffer1.size(),buffer2.size());
+        if(idBuffer==1 || decision == 1) {
         	buffer1.add(dato);
         	pn.isPos(6);
         	notEmpty1.signal();
         }
 
         else {
-        	buffer2.add(dato);
-        	pn.isPos(7);
-        	notEmpty2.signal();
+            if(decision == 2) {
+                buffer2.add(dato);
+                pn.isPos(7);
+                notEmpty2.signal();
+            }
         }
         lock.unlock();
     }
@@ -143,4 +145,5 @@ public class Monitor {
        
         lock.unlock();
     }
+
 }
