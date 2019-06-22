@@ -3,12 +3,12 @@ public class PN {
 
     int[]m;
     int[][] w;
-    int[] S;
+
 
     public PN(int[] m, int[][] w, int[] s) {
         this.m = m;
         this.w = w;
-        S = s;
+
     }
 
     public  PN(){
@@ -17,7 +17,7 @@ public class PN {
 
     public void init(){
 
-        this.m = new int[]{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1}; //Vector de marcado inicial
+        this.m = new int[]{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1}; //Vector de marcado inicial
 
         /**
          * m0: Active
@@ -32,15 +32,13 @@ public class PN {
          * m9: P1
          * m10:P13
          * m11:P16
-         * m12:P17
-         * m13:P6
-         * m14:Power_up
-         * m15:Power_up_2
-         * m16:Stand_by
-         * m17:Stand_by2
+         * m12:P6
+         * m13:Power_up
+         * m14:Power_up_2
+         * m15:Stand_by
+         * m16:Stand_by2
          */
 
-        this.S = new int[]{0, 0, 0, 0, 0, 0, 0, 0}; //Vector de disparo
 
         /**
          * T0: Arrival_rate
@@ -73,18 +71,15 @@ public class PN {
                              {1 , 0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0},		// 9	P1
                              {0 , 0,  0,  0, -1,  0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0},		// 10	P13
                              {0 , 0,  0,  0,  0,  0,  0,  1,  0,  0, -1, -1,  0,  0,  0,  0},		// 11	P16
-                             {0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 12	P17
-                             {0 , 0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  0,  0},		// 13	P6
-                             {0 , 0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0},		// 14	Power_up
-                             {0 , 0,  0,  0, -1,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},		// 15	Power_up_2
-                             {0 , 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0},		// 16	Stand_by
-                             {0 , 0, -1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0}};		// 17	Stand_by_2
+                             {0 , 0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  0,  0},		// 12	P6
+                             {0 , 0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0},		// 13	Power_up
+                             {0 , 0,  0,  0, -1,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},		// 14	Power_up_2
+                             {0 , 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0},		// 15	Stand_by
+                             {0 , 0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0}};		// 16	Stand_by_2
     }
 
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
-        this.S = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-        S[index] = 1;
 
         int[] mPrima = new int[m.length];
 

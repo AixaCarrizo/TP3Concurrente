@@ -1,5 +1,6 @@
-import java.util.ArrayDeque;
+
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class CPU_buffer1 {
@@ -9,7 +10,7 @@ public class CPU_buffer1 {
 
 	    public CPU_buffer1() {
 
-	        cola = new ArrayDeque<>();
+	        cola = new ConcurrentLinkedQueue<>();
 	    }
 
 	    public void add(String dato) {
