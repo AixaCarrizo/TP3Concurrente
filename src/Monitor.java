@@ -28,14 +28,18 @@ public class Monitor {
     public int shoot(int index){  //Dispara una transicion (index)
     	lock.lock();
     	if(index==10|| index==11) {
+    		lock.unlock();
     		return this.politica.prioridad();
     	}
+    	if (index==0|| index==7) {
+    		pn.isPos(index);
+    		lock.unlock();
+    		return 0;//no importa que devuelve, solo quiero que haga los disparos, y estos dos siempre los puede hacer secuencialmente
+    	}
     	
-   //hasta aca cambie weas 	
     	
         while (!pn.isPos(index)) {
         	
-//          System.out.println("asdasd" + contCons);
             if (contProd == 480 && contCons == 480) { //Esto solo le interesa al Consumidor. El Productor muere solo.
             	notEmpty1.signalAll();
             	notEmpty2.signalAll();
