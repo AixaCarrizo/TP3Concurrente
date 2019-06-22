@@ -12,12 +12,13 @@ public class Monitor {
 	private final static Condition notEmpty1 = lock.newCondition();
 	private final static Condition notFull2 = lock.newCondition();
 	private final static Condition notEmpty2 = lock.newCondition();
-
+	
     private int contProd = 0;
     private int contCons=0;
     private PN pn = new PN();
     CPU_buffer1 buffer1;
     CPU_buffer2 buffer2;
+    private Politica politica= new Politica(buffer1, buffer2);
     
     public Monitor(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
          this.buffer1=buffer1;
@@ -26,6 +27,12 @@ public class Monitor {
 
     public int shoot(int index){  //Dispara una transicion (index)
     	lock.lock();
+    	if(index==10|| index==11) {
+    		return this.politica.prioridad();
+    	}
+    	
+   //hasta aca cambie weas 	
+    	
         while (!pn.isPos(index)) {
         	
 //          System.out.println("asdasd" + contCons);
