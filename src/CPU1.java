@@ -35,9 +35,7 @@ public class CPU1 extends Thread{
 
 	                	break;
 
-	                case 5:
-	                    monitor.shoot(13);
-	                    break;
+
 
 	                case -1:
 	                    System.out.println("Soy un consumidor y TERMINE " + id);

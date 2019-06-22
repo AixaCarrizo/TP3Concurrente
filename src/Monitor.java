@@ -76,6 +76,8 @@ public class Monitor {
 
 				case 12: //No pude procesar
 				{
+					notEmpty1.await(); 
+				}
 					return 1;
 				}
         }
