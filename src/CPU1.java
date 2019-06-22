@@ -15,27 +15,21 @@ public class CPU1 extends Thread{
 
 	        while(true) {
 
-	            double choose = Math.random()*100 +1;
-	            int index = 0;
 
-	            if(choose<50) index = 0;
-	            else index = 3;
 	            
-	            switch (monitor.shoot(index)) {
-	                case 1:
+	            switch (monitor.shoot(12)) {
+	                case 12:
+						proceso();
 	                	break;
-	                case 0:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-
-	                    monitor.quitar(1);
+	                case 1: //Si no pude procesar, veo si debo poner en standBy
+						monitor.shoot(1);
 	                    break;
 
-	                case 2:
+	                case 6: // despierta el nucleo
+	                	monitor.shoot(14);
+	                	monitor.shoot(3); // Dispara powe-up Delay
 	                	break;
+
 	                case 3:
 	                    try {
 	                        sleep(50);
@@ -51,4 +45,16 @@ public class CPU1 extends Thread{
 	            }
 	        }
 	    }
+
+
+	    public void proceso()
+		{
+			try {
+				sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			monitor.shoot(5);
+
+		}
 }
