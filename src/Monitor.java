@@ -59,10 +59,10 @@ public class Monitor {
 
 
 
-                case 1:
+                case 13:
 
                     	lock.unlock();
-                    	return 6;
+                    	return 14;
 
 
 

@@ -17,26 +17,26 @@ public class CPU1 extends Thread{
 
 
 	            
-	            switch (monitor.shoot(12)) {
-	                case 12:
+	            switch (monitor.shoot(13)) //Intento diaparar T5
+				{
+	                case 13: //Si pude, intento procesar
+	                	monitor.shoot(12)
 						proceso();
 	                	break;
-	                case 1: //Si no pude procesar, veo si debo poner en standBy
-						monitor.shoot(1);
+	                case 14: //Si no pude disparar T5, intento con T6
+						monitor.shoot(14);
+						monitor.shoot(3); //Si pude,disparo Power-up delay. Siempre puede.
+						monitor.shoot(12); //Intento procesar
+						proceso();
 	                    break;
 
-	                case 6: // despierta el nucleo
-	                	monitor.shoot(14);
-	                	monitor.shoot(3); // Dispara powe-up Delay
+	                case 6: // dispara T5
+	                	monitor.shoot(13);
+
 	                	break;
 
-	                case 3:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-	                    monitor.quitar(2);
+	                case 5:
+	                    monitor.shoot(13);
 	                    break;
 
 	                case -1:
