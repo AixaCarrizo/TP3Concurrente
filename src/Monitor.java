@@ -18,19 +18,29 @@ public class Monitor {
     private PN pn = new PN();
     CPU_buffer1 buffer1;
     CPU_buffer2 buffer2;
-    private Politica politica= new Politica(buffer1, buffer2);
-    
+      private Politica politica;
+
     public Monitor(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
          this.buffer1=buffer1;
          this.buffer2=buffer2;
+         politica = new Politica(buffer1,buffer2);
     }
 
     public int shoot(int index){  //Dispara una transicion (index)
     	lock.lock();
-    	if(index==10|| index==11) {
+    	if(index==15|| index==12) {
     		lock.unlock();
     		return this.politica.prioridad();
     	}
+		if(this.politica.prioridad()==1) {
+			if (pn.m[0] == 0 && pn.m[2] != 0) {
+				return 12;
+			}
+		}else{
+			if (pn.m[1] == 0 && pn.m[3] != 0) {
+				return 15;
+			}
+		}
 
     	if(index== 1)
 		{
