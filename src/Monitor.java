@@ -33,11 +33,11 @@ public class Monitor {
     		return this.politica.prioridad();
     	}
 		if(this.politica.prioridad()==1) {
-			if (pn.m[0] == 0 && pn.m[2] != 0) {
+			if (pn.m[6] != 0 && pn.m[2] != 0) {
 				return 12;
 			}
 		}else{
-			if (pn.m[1] == 0 && pn.m[3] != 0) {
+			if (pn.m[7] != 0 && pn.m[3] != 0) {
 				return 15;
 			}
 		}
