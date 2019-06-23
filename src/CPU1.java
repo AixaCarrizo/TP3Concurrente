@@ -15,35 +15,27 @@ public class CPU1 extends Thread{
 
 	        while(true) {
 
-	            double choose = Math.random()*100 +1;
-	            int index = 0;
 
-	            if(choose<50) index = 0;
-	            else index = 3;
 	            
-	            switch (monitor.shoot(index)) {
-	                case 1:
+	            switch (monitor.shoot(13)) //Intento diaparar T5
+				{
+	                case 13: //Si pude, intento procesar
+	                	monitor.shoot(12);
+						proceso();
 	                	break;
-	                case 0:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-
-	                    monitor.quitar(1);
+	                case 14: //Si no pude disparar T5, intento con T6
+						monitor.shoot(14);
+						monitor.shoot(3); //Si pude,disparo Power-up delay. Siempre puede.
+						monitor.shoot(12); //Intento procesar
+						proceso();
 	                    break;
 
-	                case 2:
+	                case 6: // dispara T5
+	                	monitor.shoot(13);
+
 	                	break;
-	                case 3:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-	                    monitor.quitar(2);
-	                    break;
+
+
 
 	                case -1:
 	                    System.out.println("Soy un consumidor y TERMINE " + id);
@@ -51,4 +43,16 @@ public class CPU1 extends Thread{
 	            }
 	        }
 	    }
+
+
+	    public void proceso()
+		{
+			try {
+				sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			monitor.shoot(5);
+
+		}
 }

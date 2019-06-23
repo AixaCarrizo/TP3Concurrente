@@ -1,54 +1,58 @@
-//hace de "consumidor" para el buffer2
+
+//hace de "consumidor" para el buffer1
 public class CPU2 extends Thread{
-	 private int id;
-	    private Monitor monitor;
+	private int id;
+	private Monitor monitor;
 
-	    public CPU2(int id, Monitor monitor){
-	        this.id = id;
-	        this.monitor = monitor;
-	    }
+	public CPU2(int id, Monitor monitor){
+		this.id = id;
+		this.monitor = monitor;
+	}
 
-	    @Override
-	    public void run() {
-	        super.run();
+	@Override
+	public void run() {
+		super.run();
 
-	        while(true) {
+		while(true) {
 
-	            double choose = Math.random()*100 +1;
-	            int index = 0;
 
-	            if(choose<50) index = 0;
-	            else index = 3;
-	            
-	            switch (monitor.shoot(index)) {
-	                case 1:
-	                	break;
-	                case 0:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
 
-	                    monitor.quitar(1);
-	                    break;
+			switch (monitor.shoot(8)) //Intento diaparar T12
+			{
+				case 8: //Si pude, intento procesar
+					monitor.shoot(15);
+					proceso();
+					break;
+				case 9: //Si no pude disparar T12, intento con T13
+					monitor.shoot(9);
+					monitor.shoot(4); //Si pude,disparo Power-up delay 2. Siempre puede.
+					monitor.shoot(15); //Intento procesar
+					proceso();
+					break;
 
-	                case 2:
-	                	break;
-	                case 3:
-	                    try {
-	                        sleep(50);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-	                    monitor.quitar(2);
-	                    break;
+				case 6: // dispara T12
+					monitor.shoot(8);
 
-	                case -1:
-	                    System.out.println("Soy un consumidor y TERMINE " + id);
-	                    return;
-	            }
-	        }
-	    }
+					break;
 
+
+
+				case -1:
+					System.out.println("Soy un consumidor y TERMINE " + id);
+					return;
+			}
+		}
+	}
+
+
+	public void proceso()
+	{
+		try {
+			sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		monitor.shoot(6);
+
+	}
 }

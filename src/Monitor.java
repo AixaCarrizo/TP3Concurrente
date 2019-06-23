@@ -31,6 +31,14 @@ public class Monitor {
     		lock.unlock();
     		return this.politica.prioridad();
     	}
+
+    	if(index== 1)
+		{
+			if ((pn.m[0]!=0)&&(pn.m[2]!=0))
+			{
+				return 6;
+			}
+		}
     	if (index==0|| index==7) {
     		pn.isPos(index);
     		lock.unlock();
@@ -49,68 +57,29 @@ public class Monitor {
 
             switch (index) {
 
-                case 0:
-                    if (pn.isPos(3)) {
-                    	lock.unlock();
-                    	return 3;
-                    }
-                    else {
-                    	try {
-							notEmpty2.await();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}                    	
-                    }
-                    break;
 
-                case 3:
-                    if (pn.isPos(0)) {
-                    	lock.unlock();
-                    	return 0;
-                    }
-                    else {
-                    	try {
-							notEmpty1.await();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-                    	}
-                    }
-                	break;
 
-                case 1:
-                    if (pn.isPos(2)) {
-                    	lock.unlock();
-                    	return 2;
-                    }
-                    else {
-            			try {
-        					notFull2.await();
-        				} catch (InterruptedException e2) {
-        					// TODO Auto-generated catch block
-        					e2.printStackTrace();
-        				}
-                    }
-                    break;
+                case 13:
 
-                case 2:
-                	
-                    if (pn.isPos(1)) {
                     	lock.unlock();
-                    	return 1;
-                    }
-					else {
-						try {
-							notFull1.await();
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
+                    	return 14;
 
-                    break;
-            }
+
+
+
+                case 14:
+                	lock.unlock();
+                	return 5;
+
+
+
+
+				case 12: //No pude procesar
+				{
+					notEmpty1.await(); 
+				}
+					return 1;
+				}
         }
 
         lock.unlock();
