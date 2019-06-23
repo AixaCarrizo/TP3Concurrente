@@ -8,115 +8,176 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Monitor {
 	
 	static Lock lock=new ReentrantLock();
-	private final static Condition notFull1 = lock.newCondition();
+	private final static Condition noTaskAvailable = lock.newCondition();
 	private final static Condition notEmpty1 = lock.newCondition();
-	private final static Condition notFull2 = lock.newCondition();
 	private final static Condition notEmpty2 = lock.newCondition();
-	
+	private final static Condition  CPU1notON= lock.newCondition();
+	private final static Condition  CPU2notON= lock.newCondition();
     private int contProd = 0;
     private int contCons=0;
     private PN pn = new PN();
     CPU_buffer1 buffer1;
     CPU_buffer2 buffer2;
-      private Politica politica;
+    private Politica politica;
 
     public Monitor(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
          this.buffer1=buffer1;
          this.buffer2=buffer2;
          politica = new Politica(buffer1,buffer2);
     }
+    
 
     public int shoot(int index){  //Dispara una transicion (index)
     	lock.lock();
-    	if(index==15|| index==12) {
-    		lock.unlock();
-    		return this.politica.prioridad();
-    	}
-		if(this.politica.prioridad()==1) {
-			if (pn.m[6] != 0 && pn.m[2] != 0) {
-				return 12;
-			}
-		}else{
-			if (pn.m[7] != 0 && pn.m[3] != 0) {
-				return 15;
-			}
-		}
-
-    	if(index== 1)
-		{
-			if ((pn.m[0]!=0)&&(pn.m[2]!=0))
-			{
-				return 6;
-			}
-		}
-    	if (index==0|| index==7) {
+    	
+    	//PRODUCTOR
+    	
+    	if (index==0|| index==7) {//productor quiere producir
     		pn.isPos(index);
+    		if(index==7) {
+    			noTaskAvailable.signalAll();
+    		}
     		lock.unlock();
     		return 0;//no importa que devuelve, solo quiero que haga los disparos, y estos dos siempre los puede hacer secuencialmente
     	}
     	
     	
-        while (!pn.isPos(index)) {
-        	
-            if (contProd == 480 && contCons == 480) { //Esto solo le interesa al Consumidor. El Productor muere solo.
-            	notEmpty1.signalAll();
-            	notEmpty2.signalAll();
-                lock.unlock();
-                return -1;
-            }
-
-            switch (index) {
-
-
-
-                case 13:
-
-                    	lock.unlock();
-                    	return 14;
-
-
-
-
-                case 14:
-                	lock.unlock();
-                	return 5;
-
-
-
-
-		case 12: //No pude procesar
+    	//ASIGNADOR
+    	if(index==10|| index==11) {//asigna la tarea a un CPU u otro
+    		index=this.politica.prioridad();//elige el CPU		
+    		lock.unlock();
+    		if(index==2) {//si eligio el 2
+    			pn.isPos(10);//dispara t14
+		    	notEmpty2.signal();
+    		}
+    		else {
+    			pn.isPos(11);//sino dispara t15
+    	    	notEmpty1.signal();
+    		}
+    		return index; //y devuelve el nro de CPU
+    	}
+    	
+    	
+    	
+    	//CPU
+    	if(index== 1)//CPU1 intenta apagarse
+		{
+			if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
 			{
-				try {
-					notEmpty1.await();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					}
-				}
-				return 1;
+				pn.isPos(6);//entonces pasa a atender la tarea activa
+				lock.unlock();
+				return 0;
 			}
-        }
-
-        lock.unlock();
-        return index; //Logro agregar en el buffer que intentó incialmente
-    }
-
-    public void agregar(int idBuffer, String dato){
-    	//System.out.println(contProd);
-    	lock.lock();
-       contProd++;
-
-        if(idBuffer==1) {
-        	buffer1.add(dato);
-        	pn.isPos(6);
-        	notEmpty1.signal();
-        }
-
-        else {
-        	buffer2.add(dato);
-        	pn.isPos(7);
-        	notEmpty2.signal();
-        }
-        lock.unlock();
+			else {
+				pn.isPos(index);//puede apagarse
+				lock.unlock();
+				return 0;
+			}
+		}
+    	
+    	//CPU
+    	if(index==2)//CPU2 intenta apagarse
+    	{
+			if ((pn.m[1]!=0)||(pn.m[3]!=0))//pero tiene tareas activas o en el buffer
+			{
+				pn.isPos(6);//atiende tarea activa
+				lock.unlock();
+				return 0;
+			}
+			else {
+				pn.isPos(index);//puede apagarse
+				lock.unlock();
+				return 0;
+			}
+		}
+    	
+    	//CPU
+    	if (index==12) {//CPU1 quiere pasar a atender una tarea
+	    	if(pn.isPos(12)) {//si puede hacerlo, dispara transicion
+	    		lock.unlock();
+	    		return 0;
+	    	}
+	    	else {//sino, espera a que se prenda el cpu1
+	    		try {
+					CPU1notON.await();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		lock.unlock();
+	    	}
+	    	return 0;
+    	}
+    	
+     	//CPU
+    	if (index==15) {//CPU2 quiere pasar a atender una tarea
+	    	if(pn.isPos(15)) {//si puede hacerlo, dispara transicion
+	    		lock.unlock();
+	    		return 0;
+	    	}
+	    	else {//sino, espera a que se prenda el cpu1
+	    		try {
+					CPU2notON.await();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		lock.unlock();
+	    	}
+	    	return 0;
+    	}
+    	
+    	//CPU
+    	if(index==14) {//CPU1 intenta prenderse
+    		if(pn.m[15]==0) {//si no hay token en stand_by, esta prendido
+    		//	lock.unlock();
+    		//	return 0;
+    		}
+    		else{
+    			if(pn.isPos(index)) {//si pudo disparar t6
+	    			pn.isPos(3); //dispara power_up_delay
+	    			pn.isPos(13);//y t5
+	    		}
+    			else {//si no pudo, no hay tareas disponibles
+    				try {
+						noTaskAvailable.await();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
+    		}
+    		lock.unlock();
+    		return 0;
+    	}
+    	
+    	
+    	//CPU
+    	if(index==9) {//CPU2 intenta prenderse
+    		if(pn.m[16]==0) {//si no hay token en stand_by_2, esta prendido
+    		//	lock.unlock();
+    		//	return 0;
+    		}
+    		else{
+    			if(pn.isPos(index)) {//si pudo disparar t13
+	    			pn.isPos(4); //dispara power_up_delay_2
+	    			pn.isPos(8);//y t12
+	    		}
+    			else {//si no pudo, no hay tareas disponibles
+    				try {
+						noTaskAvailable.await();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
+    		}
+    		lock.unlock();
+    		return 0;
+    	}
+    	lock.unlock();
+		return 0;	
+  
     }
 
     public void quitar(int idBuffer){
@@ -127,14 +188,14 @@ public class Monitor {
         if(idBuffer==1) {
         	buffer1.remove();
         	pn.isPos(5);
-        	notFull1.signal();
         }
         else {
         	buffer2.remove();
-        	pn.isPos(4);
-        	notFull2.signal();
+        	pn.isPos(6);
         }
        
         lock.unlock();
     }
+
+
 }

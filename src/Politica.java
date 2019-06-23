@@ -10,14 +10,11 @@ public class Politica {
 
 	public int prioridad() { //b1 = size buffer1 , b2 = size buffer 2
 
-        if(b1.size()>b2.size()){
-            return 2;
+        if(b1.size()>b2.size()){//si hay mas tareas en el buffer1 que en el 2
+            return 2;//usa el 2
         }
-        else if (b1.size()<b2.size()){
-            return 1;
-        }
-        else {
-            return 1;
+        else{
+            return 1;//sino usa el 1
         }
      }
 }
