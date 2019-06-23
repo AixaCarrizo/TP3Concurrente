@@ -74,12 +74,16 @@ public class Monitor {
 
 
 
-				case 12: //No pude procesar
-				{
-					notEmpty1.await(); 
+		case 12: //No pude procesar
+			{
+				try {
+					notEmpty1.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					}
 				}
-					return 1;
-				}
+				return 1;
+			}
         }
 
         lock.unlock();
