@@ -4,8 +4,8 @@ public class Politica {
 	private CPU_buffer2 b2;
 	
     public Politica(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
-    	buffer1=b1;
-    	buffer2=b2;
+    	b1 = buffer1;
+    	b2 = buffer2;
 	}
 
 	public int prioridad() { //b1 = size buffer1 , b2 = size buffer 2
