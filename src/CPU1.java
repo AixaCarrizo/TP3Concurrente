@@ -15,44 +15,27 @@ public class CPU1 extends Thread{
 
 	        while(true) {
 
+	        	monitor.shoot(14);
 
-	            
-	            switch (monitor.shoot(13)) //Intento diaparar T5
-				{
-	                case 13: //Si pude, intento procesar
-	                	monitor.shoot(12);
-						proceso();
-	                	break;
-	                case 14: //Si no pude disparar T5, intento con T6
-						monitor.shoot(14);
-						monitor.shoot(3); //Si pude,disparo Power-up delay. Siempre puede.
-						monitor.shoot(12); //Intento procesar
-						proceso();
-	                    break;
+				monitor.shoot(12);
 
-	                case 6: // dispara T5
-	                	monitor.shoot(13);
+				while(monitor.shoot(1) == -1){
+					/**
+					 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo
+					 * Espera un tiempo aleatorio entre 10-50 milisegundos y vuelve a intentar.
+					 * Y así hasta que consigue hacerlo dentro del rango deseado.
+					 */
 
-	                	break;
+					try {
+						long choose = (long) (Math.random()*50 +10);
 
+						sleep(choose);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
-
-	                case -1:
-	                    System.out.println("Soy un consumidor y TERMINE " + id);
-	                    return;
-	            }
 	        }
 	    }
-
-
-	    public void proceso()
-		{
-			try {
-				sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			monitor.shoot(5);
-
-		}
 }
