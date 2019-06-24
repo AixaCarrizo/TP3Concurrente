@@ -15,8 +15,8 @@ public class Main{
         Thread[] CPUS = new Thread[2];
         	Asignador asignador=new Asignador(monitor, buffer1, buffer2);
         	Thread prod =new Productor(0, monitor, asignador);
-        	Thread CPU1= new CPU1(1, monitor);
-        	Thread CPU2= new CPU2(2, monitor);
+        	Thread CPU1= new CPU1(1, monitor, buffer1);
+        	Thread CPU2= new CPU2(2, monitor, buffer2);
         	CPUS[0]=CPU1;
         	CPUS[1]=CPU2;
         	prod.start();

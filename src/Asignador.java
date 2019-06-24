@@ -17,7 +17,7 @@ public void setTarea(String tarea) {
 
 public void asignar(String tarea) {
 
-	if(monitor.shoot(10)==1) {
+	if(monitor.shoot(11)==1) {
 				buffer1.add(tarea);	
 		    }
 		

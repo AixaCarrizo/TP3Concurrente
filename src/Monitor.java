@@ -1,4 +1,5 @@
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -41,40 +42,16 @@ public class Monitor {
     public int shoot(int index){  //Dispara una transicion (index)
     	lock.lock();
     	
+    	
+    	switch (index) {
     	//PRODUCTOR
-    	
-    	if (index==0|| index==7) {//productor quiere producir
+    	case 0:
     		pn.isPos(index);
-    		if(index==7) {
-    			noTaskAvailable.signalAll();
-    			System.out.println("pingo");
-    		}
     		lock.unlock();
-    		return 0;//no importa que devuelve, solo quiero que haga los disparos, y estos dos siempre los puede hacer secuencialmente
-    	}
-    	
-    	
-    	//ASIGNADOR
-    	if(index==10|| index==11) {//asigna la tarea a un CPU u otro (T14 ó T15)
-    		index=this.politica.prioridad();//elige el CPU	
-    		if(index==2) {//si eligio el 2
-    			pn.isPos(10);//dispara t14
-		    	notEmpty2.signal();
-    		}
-    		else {
-    			pn.isPos(11);//sino dispara t15
-    	    	notEmpty1.signal();
-    		}
-			lock.unlock();
-			return index; //y devuelve el nro de CPU
-    	}
-    	
-    	
-    	
+    		return 0;
     	//CPU1
-    	if(index== 1)//CPU1 intenta apagarse
-		{
-			if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
+    	case 1://CPU1 intenta apagarse
+    		if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
 			{
 				if(windowsTimer(1)) { //Le deja disparar la transicion temporal ServiceRate1
 					pn.isPos(5);
@@ -92,35 +69,91 @@ public class Monitor {
 				lock.unlock();
 				return 0;
 			}
-		}
-    	
-    	//CPU2
-    	if(index==2)//CPU2 intenta apagarse
-    	{
-			if ((pn.m[1]!=0)||(pn.m[3]!=0))//pero tiene tareas activas o en el buffer
-			{
-				if(windowsTimer(2)){ //Le deja disparar la transicion temporal ServiceRate1
-					pn.isPos(6);
-					pn.isPos(index);
+    		
+    	//CPU2	
+		case 2://CPU2 intenta apagarse
+				if ((pn.m[1]!=0)||(pn.m[3]!=0))//pero tiene tareas activas o en el buffer
+				{
+					if(windowsTimer(2)){ //Le deja disparar la transicion temporal ServiceRate1
+						pn.isPos(6);
+						pn.isPos(index);
+						lock.unlock();
+						return 0;
+					}
+
+					lock.unlock();
+					return -1;
+				}
+				else {
+					pn.isPos(index);//puede apagarse
 					lock.unlock();
 					return 0;
 				}
-
-				lock.unlock();
-				return -1;
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		
+		
+		case 7:
+			pn.isPos(index);
+			noTaskAvailable.signalAll();
+			System.out.println("asadsadsa");
+			lock.unlock();
+			return 0;
+    		
+		case 8:
+			
+		//CPU2
+		case 9: //CPU2 intenta prenderse
+	    		if(pn.isPos(index)) {//si pudo disparar t13
+		    		pn.isPos(4); //dispara power_up_delay_2
+		    		pn.isPos(8);//y t12
+		    	}
+	    		else {//si no pudo, no hay tareas disponibles
+	    			try {
+	    				noTaskAvailable.await(50, TimeUnit.MILLISECONDS);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    		}
+	    	lock.unlock();
+	    	return 0;
+			
+		//ASIGNADOR	
+		case 10:
+			index=this.politica.prioridad();
+			if (index==2) {
+				pn.isPos(10);
+				notEmpty2.signalAll();
 			}
 			else {
-				pn.isPos(index);//puede apagarse
-				lock.unlock();
-				return 0;
+				pn.isPos(11);
+				notEmpty1.signalAll();
 			}
-		}
-    	
-    	//CPU1
-    	if (index==12) {//CPU1 quiere pasar a atender una tarea (T2)
-	    	if(pn.isPos(12)) {//si puede hacerlo, dispara transicion
+			lock.unlock();
+			return index;
+			
+		//ASIGNADOR	
+		case 11:
+			index=this.politica.prioridad();
+			if (index==2) {
+				pn.isPos(10);
+				notEmpty2.signalAll();
+			}
+			else {
+				pn.isPos(11);
+				notEmpty1.signalAll();
+			}
+			lock.unlock();
+			return index;
+			
+		//CPU1	
+		case 12:
+			if(pn.isPos(12)) {//si puede hacerlo, dispara transicion
 
-	    		windowsTimer(1);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
+	    		this.windowsTimer(1);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
 
 	    		lock.unlock();
 	    		return 0;
@@ -135,13 +168,34 @@ public class Monitor {
 	    		lock.unlock();
 	    	}
 	    	return 0;
-    	}
-    	
-     	//CPU2
-    	if (index==15) {//CPU2 quiere pasar a atender una tarea
-	    	if(pn.isPos(15)) {//si puede hacerlo, dispara transicion
+	    
+		case 13:
+			
+		//CPU1
+		case 14://CPU1 intenta prenderse
+			if(pn.isPos(index)) {//si pudo disparar t6
+				pn.isPos(3); //dispara power_up_delay
+				pn.isPos(13);//y t5
+				lock.unlock();
+				return 1;
+			}
+			else {//si no pudo, no hay tareas disponibles
+				try {
+					noTaskAvailable.await(50, TimeUnit.MILLISECONDS);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				lock.unlock();
+	    		return 0;
+			}
+			
+			
+		//CPU2
+		case 15://CPU2 quiere pasar a atender una tarea
+			if(pn.isPos(15)) {//si puede hacerlo, dispara transicion
 
-	    		windowsTimer(2); //Pudo hacerT T8, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate2
+	    		this.windowsTimer(2); //Pudo hacerT T8, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate2
 
 	    		lock.unlock();
 	    		return 0;
@@ -157,76 +211,18 @@ public class Monitor {
 	    	}
 	    	return 0;
     	}
-    	
-		//CPU1
-    	if(index==14) {//CPU1 intenta prenderse
-
-			if(pn.isPos(index)) {//si pudo disparar t6
-				pn.isPos(3); //dispara power_up_delay
-				pn.isPos(13);//y t5
-				lock.unlock();
-				return 1;
-			}
-			else {//si no pudo, no hay tareas disponibles
-				try {
-					noTaskAvailable.await();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				lock.unlock();
-	    		return 0;
-			}
-    	}
-    	
-    	
-    	//CPU2
-    	if(index==9) {//CPU2 intenta prenderse
-    		if(pn.m[16]==0) {//si no hay token en stand_by_2, esta prendido
-    		//	lock.unlock();
-    		//	return 0;
-    		}
-    		else{
-    			if(pn.isPos(index)) {//si pudo disparar t13
-	    			pn.isPos(4); //dispara power_up_delay_2
-	    			pn.isPos(8);//y t12
-	    		}
-    			else {//si no pudo, no hay tareas disponibles
-    				try {
-						noTaskAvailable.await();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-    			}
-    		}
-    		lock.unlock();
-    		return 0;
-    	}
-
-
-    	lock.unlock();
-		return 0;	
-  
+		return 0;
     }
+    
+    	
+     
+    	
+		
+    	
+    	
+    	
 
-    public void quitar(int idBuffer){
-//    	System.out.println(contCons);
-    	lock.lock();
-        contCons++;
-
-        if(idBuffer==1) {
-        	buffer1.remove();
-        	pn.isPos(5);
-        }
-        else {
-        	buffer2.remove();
-        	pn.isPos(6);
-        }
-       
-        lock.unlock();
-    }
-    public boolean windowsTimer(int select){
+public boolean windowsTimer(int select){
 
 
     	//Esta primera parte solo es para cuando se sencibiliza por primera vez y empieza a contar.

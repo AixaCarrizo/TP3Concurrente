@@ -3,10 +3,11 @@
 public class CPU1 extends Thread{
 	    private int id;
 	    private Monitor monitor;
-
-	    public CPU1(int id, Monitor monitor){
+	    private CPU_buffer buffer1;
+	    public CPU1(int id, Monitor monitor, CPU_buffer buffer1){
 	        this.id = id;
 	        this.monitor = monitor;
+	        this.buffer1=buffer1;
 	    }
 
 	    @Override
@@ -14,13 +15,14 @@ public class CPU1 extends Thread{
 	        super.run();
 
 	        while(true) {
-
-	        	while(monitor.shoot(14)==0) {
-	        		System.out.println("raios");
-	        	};
-	        		System.out.println("awebo");	
+	        	
+	        	monitor.shoot(14); 
+	        	System.out.println("raios");
+	        		
 	        	
 				monitor.shoot(12);
+				System.out.println("awebo");	
+				buffer1.remove();
 
 				while(monitor.shoot(1) == -1){
 					/**
@@ -39,6 +41,7 @@ public class CPU1 extends Thread{
 					}
 				}
 
+	          }
 	        }
-	    }
+	    
 }

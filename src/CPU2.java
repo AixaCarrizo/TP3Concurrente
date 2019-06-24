@@ -3,10 +3,11 @@
 public class CPU2 extends Thread{
 	private int id;
 	private Monitor monitor;
-
-	public CPU2(int id, Monitor monitor){
+	private CPU_buffer buffer2;
+	public CPU2(int id, Monitor monitor, CPU_buffer buffer2){
 		this.id = id;
 		this.monitor = monitor;
+		this.buffer2=buffer2;
 	}
 
 	@Override
@@ -16,8 +17,10 @@ public class CPU2 extends Thread{
 		while(true) {
 
 			monitor.shoot(9);
+		  	System.out.println("lalala");
 
 			monitor.shoot(15);
+			buffer2.remove();
 
 			while(monitor.shoot(2) == -1){
 				/**
