@@ -6,10 +6,12 @@ public class Productor extends Thread {
 	
     private int id;
     private Monitor monitor;
+    private Asignador asignador;
 
-    public Productor(int id, Monitor monitor){
+    public Productor(int id, Monitor monitor, Asignador asignador){
         this.id = id;
         this.monitor = monitor;
+        this.asignador=asignador;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class Productor extends Thread {
 				e.printStackTrace();
 			}
         	monitor.shoot(7);
-
+        	this.asignador.asignar("producto nro"+cont);
             cont++;
             cont2++;
             //System.out.println(cont);
@@ -37,6 +39,7 @@ public class Productor extends Thread {
                 System.out.println("El prductor " + id + " ya lleva: " + cont);
                 cont2=0;
             }
+        
         }
         System.out.println("Soy un productor y TERMINE: " + id);
     }

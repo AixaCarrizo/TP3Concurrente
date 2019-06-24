@@ -80,7 +80,6 @@ public class PN {
 
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
-
         int[] mPrima = new int[m.length];
 
         for (int i = 0; i < m.length; i++) {   //Si algun numero del nuevo vector de marcado es negativo, no puedo dispararla

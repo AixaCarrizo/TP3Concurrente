@@ -1,22 +1,21 @@
 
 public class Asignador{
 	private Monitor monitor;
-	private CPU_buffer1 buffer1;
-	private CPU_buffer2 buffer2;
+	private CPU_buffer buffer1;
+	private CPU_buffer buffer2;
 	private String tarea;
 
-	public Asignador(Monitor monitor, CPU_buffer1 buffer1, CPU_buffer2 buffer2, String tarea) {
+	public Asignador(Monitor monitor, CPU_buffer buffer1, CPU_buffer buffer2) {
 		this.buffer1=buffer1;
 		this.monitor=monitor;
 		this.buffer2=buffer2;
-		this.tarea=tarea;
 	}
 
 public void setTarea(String tarea) {
 	this.tarea=tarea;
 }
 
-public void asignar() {
+public void asignar(String tarea) {
 
 	if(monitor.shoot(10)==1) {
 				buffer1.add(tarea);	

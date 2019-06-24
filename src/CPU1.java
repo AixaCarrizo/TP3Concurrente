@@ -15,8 +15,11 @@ public class CPU1 extends Thread{
 
 	        while(true) {
 
-	        	monitor.shoot(14);
-
+	        	while(monitor.shoot(14)==0) {
+	        		System.out.println("raios");
+	        	};
+	        		System.out.println("awebo");	
+	        	
 				monitor.shoot(12);
 
 				while(monitor.shoot(1) == -1){

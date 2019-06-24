@@ -1,6 +1,4 @@
 
-
-import java.sql.SQLOutput;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -27,11 +25,11 @@ public class Monitor {
     private int contCons=0;
 
     private PN pn = new PN();
-    CPU_buffer1 buffer1;
-    CPU_buffer2 buffer2;
+    CPU_buffer buffer1;
+    CPU_buffer buffer2;
     private Politica politica;
 
-    public Monitor(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
+    public Monitor(CPU_buffer buffer1, CPU_buffer buffer2) {
          this.buffer1=buffer1;
          this.buffer2=buffer2;
          timeCPU1 = 0;
@@ -49,6 +47,7 @@ public class Monitor {
     		pn.isPos(index);
     		if(index==7) {
     			noTaskAvailable.signalAll();
+    			System.out.println("pingo");
     		}
     		lock.unlock();
     		return 0;//no importa que devuelve, solo quiero que haga los disparos, y estos dos siempre los puede hacer secuencialmente
@@ -57,7 +56,7 @@ public class Monitor {
     	
     	//ASIGNADOR
     	if(index==10|| index==11) {//asigna la tarea a un CPU u otro (T14 ó T15)
-    		index=this.politica.prioridad();//elige el CPU		
+    		index=this.politica.prioridad();//elige el CPU	
     		if(index==2) {//si eligio el 2
     			pn.isPos(10);//dispara t14
 		    	notEmpty2.signal();
@@ -165,6 +164,8 @@ public class Monitor {
 			if(pn.isPos(index)) {//si pudo disparar t6
 				pn.isPos(3); //dispara power_up_delay
 				pn.isPos(13);//y t5
+				lock.unlock();
+				return 1;
 			}
 			else {//si no pudo, no hay tareas disponibles
 				try {
@@ -173,10 +174,9 @@ public class Monitor {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				lock.unlock();
+	    		return 0;
 			}
-
-    		lock.unlock();
-    		return 0;
     	}
     	
     	

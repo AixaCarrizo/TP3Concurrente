@@ -1,9 +1,9 @@
 //cuando t14(T10) y t15(T11) son posibles, elige cual disparar
 public class Politica {
-	private CPU_buffer1 b1;
-	private CPU_buffer2 b2;
+	private CPU_buffer b1;
+	private CPU_buffer b2;
 	
-    public Politica(CPU_buffer1 buffer1, CPU_buffer2 buffer2) {
+    public Politica(CPU_buffer buffer1, CPU_buffer buffer2) {
     	b1 = buffer1;
     	b2 = buffer2;
 	}

@@ -7,47 +7,33 @@ public class Main{
 
     public static void main(String[] args) {
 
-        CPU_buffer1 buffer1 = new CPU_buffer1();
-        CPU_buffer2 buffer2 = new CPU_buffer2();
+        CPU_buffer buffer1 = new CPU_buffer();
+        CPU_buffer buffer2 = new CPU_buffer();
         
         monitor = new Monitor(buffer1, buffer2);
+        
+        Thread[] CPUS = new Thread[2];
+        	Asignador asignador=new Asignador(monitor, buffer1, buffer2);
+        	Thread prod =new Productor(0, monitor, asignador);
+        	Thread CPU1= new CPU1(1, monitor);
+        	Thread CPU2= new CPU2(2, monitor);
+        	CPUS[0]=CPU1;
+        	CPUS[1]=CPU2;
+        	prod.start();
+        	CPU1.start();
+        	CPU2.start();
+        	
        
-
-
-        Thread[]prod= new Thread[5];
-//        Thread[]cons = new Thread[8];
-
-        for(int i=0; i<5; i++)
-        {
-        	prod[i] =new Productor(i, monitor); //Creo un productor y un consumidor
-        	//prod[i] =new Productor(i, monitor, buffer1, buffer2, lock);
-        	prod[i].start();
-        }
-
-//        for(int j=6 ;j<14; j++)
-//        {
-//        	 cons[j-6] =new Consumidor(j, monitor); //Creo un productor y un consumidor
-//        	// cons[j-6] =new Consumidor(j, monitor, buffer1, buffer2, lock);
-//        	 cons[j-6].start();
-//        }
-//
-//        Thread log=new Thread(new Log(buffer1, buffer2, cons  ));
-//        log.start();
+        Thread log=new Thread(new Log(buffer1, buffer2, CPUS));
+        log.start();
 
         try {
-
-            for(int i=0; i<5; i++)
+                prod.join();
+            for(int i=0; i<2; i++)
             {
-                prod[i].join();
-
+                CPUS[i].join();
             }
-
-//            for(int i=0; i<8; i++)
-//            {
-//                cons[i].join();
-//
-//            }
-//            log.join();
+            log.join();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
