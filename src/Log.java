@@ -66,7 +66,7 @@ public class Log implements Runnable{
     public void run() {
         for(int j=1; j<=100; j++) {
             this.EscribirContenido();
-            System.out.println("Se ha guardado en contenido " + j + " de 300 veces");
+           // System.out.println("Se ha guardado en contenido " + j + " de 300 veces");
             try {
                 TimeUnit.MILLISECONDS.sleep(50);
             } catch (InterruptedException e) {

@@ -17,13 +17,13 @@ public class CPU1 extends Thread{
 	        while(true) {
 	        	
 	        	monitor.shoot(14); 
-	        	System.out.println("raios");
+	        	System.out.println("monitor disparo T14");
 	        		
 	        	
 				monitor.shoot(12);
-				System.out.println("awebo");	
+				System.out.println("monitor disparo T12");	
 				buffer1.remove();
-
+				System.out.println("CPU1 consumio");
 				while(monitor.shoot(1) == -1){
 					/**
 					 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo

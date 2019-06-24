@@ -17,10 +17,11 @@ public class CPU2 extends Thread{
 		while(true) {
 
 			monitor.shoot(9);
-		  	System.out.println("lalala");
+		  	System.out.println("monitor disparo T9");
 
 			monitor.shoot(15);
 			buffer2.remove();
+			System.out.println("CPU2 consumio");
 
 			while(monitor.shoot(2) == -1){
 				/**

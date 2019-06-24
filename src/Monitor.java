@@ -98,7 +98,7 @@ public class Monitor {
 		case 7:
 			pn.isPos(index);
 			noTaskAvailable.signalAll();
-			System.out.println("asadsadsa");
+			System.out.println("Signal task");
 			lock.unlock();
 			return 0;
     		
@@ -112,7 +112,7 @@ public class Monitor {
 		    	}
 	    		else {//si no pudo, no hay tareas disponibles
 	    			try {
-	    				noTaskAvailable.await(50, TimeUnit.MILLISECONDS);
+	    				noTaskAvailable.await();
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -122,15 +122,17 @@ public class Monitor {
 	    	return 0;
 			
 		//ASIGNADOR	
-		case 10:
+		case 10://esto esta como medio al vicio porque el asignador siempre intenta hacer T11 y hacen lo mismo
 			index=this.politica.prioridad();
 			if (index==2) {
 				pn.isPos(10);
 				notEmpty2.signalAll();
+				System.out.println("signal not empty buffer 2");
 			}
 			else {
 				pn.isPos(11);
 				notEmpty1.signalAll();
+				System.out.println("signal not empty buffer 1");
 			}
 			lock.unlock();
 			return index;
@@ -141,32 +143,38 @@ public class Monitor {
 			if (index==2) {
 				pn.isPos(10);
 				notEmpty2.signalAll();
+				System.out.println("signal not empty buffer 2");
 			}
 			else {
 				pn.isPos(11);
 				notEmpty1.signalAll();
+				System.out.println("signal not empty buffer 1");
 			}
 			lock.unlock();
 			return index;
 			
 		//CPU1	
-		case 12:
-			if(pn.isPos(12)) {//si puede hacerlo, dispara transicion
-
+		case 12://CPU1 quiere pasar a atender una tarea
+			if(!pn.isPos(index)) {//si no pudo hacer el disparo, prende el cpu1
+	    		this.shoot(14);//prende el CPU
+	    	}
+	    	if(pn.isPos(12)) {//intenta disparar la transicion de nuevo
 	    		this.windowsTimer(1);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
 
 	    		lock.unlock();
 	    		return 0;
 	    	}
-	    	else {//sino, espera a que se prenda el cpu1
+	    	else {//si de nuevo no pudo, es porque no hay nada en el buffer
 	    		try {
-					CPU1notON.await();
+					notEmpty1.await();
+					System.out.println("await not empty buffer 1");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	    		lock.unlock();
 	    	}
+	    	
+	    	lock.unlock();
 	    	return 0;
 	    
 		case 13:
@@ -181,7 +189,7 @@ public class Monitor {
 			}
 			else {//si no pudo, no hay tareas disponibles
 				try {
-					noTaskAvailable.await(50, TimeUnit.MILLISECONDS);
+					noTaskAvailable.await();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -192,26 +200,50 @@ public class Monitor {
 			
 			
 		//CPU2
-		case 15://CPU2 quiere pasar a atender una tarea
-			if(pn.isPos(15)) {//si puede hacerlo, dispara transicion
-
-	    		this.windowsTimer(2); //Pudo hacerT T8, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate2
+		case 15: //CPU2 quiere pasar a atender una tarea
+//			if(pn.isPos(15)) {//si puede hacerlo, dispara transicion
+//
+//	    		this.windowsTimer(2); //Pudo hacerT T8, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate2
+//
+//	    		lock.unlock();
+//	    		return 0;
+//	    	}
+//	    	else {//sino, espera a que se prenda el cpu1
+//	    		try {
+//					CPU2notON.await(20, TimeUnit.MILLISECONDS);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//	    		lock.unlock();
+//	    	}
+//	    	return 0;
+			if(!pn.isPos(index)) {//si no pudo hacer el disparo, prende el cpu1
+	    		this.shoot(9);//prende el CPU
+	    	}
+	    	if(pn.isPos(index)) {//intenta disparar la transicion de nuevo
+	    		this.windowsTimer(2);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
 
 	    		lock.unlock();
 	    		return 0;
 	    	}
-	    	else {//sino, espera a que se prenda el cpu1
+	    	else {
 	    		try {
-					CPU2notON.await();
+					notEmpty2.await();//si de nuevo no pudo, es porque no hay nada en el buffer
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	    		lock.unlock();
 	    	}
+	    	
+	    	lock.unlock();
 	    	return 0;
+			
+			
+			
     	}
 		return 0;
+			
     }
     
     	
