@@ -16,29 +16,37 @@ public class CPU2 extends Thread{
 
 		while(true) {
 
-			monitor.shoot(9);
-		  	System.out.println("monitor disparo T9");
+			while(monitor.shoot(9)==-1);
+		  	System.out.println("monitor disparo T13");
 
-			monitor.shoot(15);
-			buffer2.remove();
-			System.out.println("CPU2 consumio");
+		  	do{
+		  		monitor.shoot(15);
+			} while (monitor.shoot(2) == -1);
 
-			while(monitor.shoot(2) == -1){
-				/**
-				 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo
-				 * Espera un tiempo aleatorio entre 5-25 milisegundos y vuelve a intentar.
-				 * Y así hasta que consigue hacerlo dentro del rango deseado.
-				 */
 
-				try {
-					long choose = (long) (Math.random()*25 +5);
-
-					sleep(choose);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+//
+//			while(monitor.shoot(15)==-1);
+//			System.out.println("monitor disparo T8");
+//
+//			buffer2.remove();
+//			System.out.println("CPU2 consumio");
+//
+//			while(monitor.shoot(2) == -1){
+//				/**
+//				 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo
+//				 * Espera un tiempo aleatorio entre 5-25 milisegundos y vuelve a intentar.
+//				 * Y así hasta que consigue hacerlo dentro del rango deseado.
+//				 */
+//
+//				try {
+//					long choose = (long) (Math.random()*25 +5);
+//
+//					sleep(choose);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 
 
 		}

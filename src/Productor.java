@@ -20,10 +20,10 @@ public class Productor extends Thread {
 
         int cont = 0;
         int cont2 = 0;
-        while(cont<100) {
+        while(cont<10) {
 
 
-        	monitor.shoot(0);//hace la transición arrival_rate
+        	monitor.shoot(0);//hace la transiciï¿½n arrival_rate
         	try {
 				sleep(50);
 			} catch (InterruptedException e) {
@@ -31,7 +31,7 @@ public class Productor extends Thread {
 				e.printStackTrace();
 			}
         	monitor.shoot(7);
-        	this.asignador.asignar("producto nro"+cont);
+        	//this.asignador.asignar("producto nro"+cont);
             cont++;
             cont2++;
             //System.out.println(cont);

@@ -63,15 +63,15 @@ public class PN {
                              {0 , 0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0 , 0,  1},		// 1	Active_2
                              {0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1, -1,  0,  0,  0},		// 2	CPU_buffer1
                              {0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, -1},		// 3	CPU_buffer2
-                             {0 ,-1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 4	CPU_ON
-                             {0 , 0, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 5	CPU_ON_2
+                             {0 ,-1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  -1,  1,  0,  0},		// 4	CPU_ON
+                             {0 , 0, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  -1},		// 5	CPU_ON_2
                              {0 , 0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0},		// 6	Idle
                              {0 , 0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0, -1},		// 7	Idle_2
                              {-1, 0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0},		// 8	P0
                              {1 , 0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0},		// 9	P1
-                             {0 , 0,  0,  0, -1,  0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0},		// 10	P13
+                             {0 , 0,  0,  0, -1,  0,  0,  1, -1,  -1,  0,  0,  0,  0,  0,  0},		// 10	P13
                              {0 , 0,  0,  0,  0,  0,  0,  1,  0,  0, -1, -1,  0,  0,  0,  0},		// 11	P16
-                             {0 , 0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  0,  0},		// 12	P6
+                             {0 , 0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  -1,  0},		// 12	P6
                              {0 , 0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0},		// 13	Power_up
                              {0 , 0,  0,  0, -1,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},		// 14	Power_up_2
                              {0 , 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0},		// 15	Stand_by
@@ -81,15 +81,40 @@ public class PN {
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
         int[] mPrima = new int[m.length];
+        System.out.println("Disparo"+index);
 
         for (int i = 0; i < m.length; i++) {   //Si algun numero del nuevo vector de marcado es negativo, no puedo dispararla
             mPrima[i] = m[i] + w[i][index];    //Sumo para obtener el nuevo vector de marcado
+            //System.out.println(i +" "+mPrima[i]+" "+m[i]+" w[i][index] "+w[i][index]);
 
-            if (mPrima[i] == -1) return false;
+            if (mPrima[i] < 0) return false;
         }
-
         this.m=mPrima;
 
+        reload(index);
+
         return true;   //Si ninguno es negativo, puedo dispararla
+    }
+
+    public void reload(int index){
+
+        switch (index) {
+
+            case 14:
+                m[12] = 1;
+                break;
+            case 11:
+            case 12:
+                m[4] = 1;
+                break;
+            case 9:
+                m[10] = 1;
+                break;
+            case 8:
+            case 15:
+                m[5] = 1;
+                break;
+        }
+
     }
 }

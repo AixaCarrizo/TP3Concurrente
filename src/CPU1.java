@@ -16,30 +16,38 @@ public class CPU1 extends Thread{
 
 	        while(true) {
 	        	
-	        	monitor.shoot(14); 
-	        	System.out.println("monitor disparo T14");
-	        		
-	        	
-				monitor.shoot(12);
-				System.out.println("monitor disparo T12");	
-				buffer1.remove();
-				System.out.println("CPU1 consumio");
-				while(monitor.shoot(1) == -1){
-					/**
-					 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo
-					 * Espera un tiempo aleatorio entre 10-50 milisegundos y vuelve a intentar.
-					 * Y así hasta que consigue hacerlo dentro del rango deseado.
-					 */
+	        	while(monitor.shoot(14)==-1);
+	        	System.out.println("monitor disparo T6 y esta en modo ON");
 
-					try {
-						long choose = (long) (Math.random()*50 +10);
+				do{
+					monitor.shoot(12);
 
-						sleep(choose);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				}while (monitor.shoot(1) == -1);
+
+
+
+//				while(monitor.shoot(12)==-1);
+//				System.out.println("monitor disparo T2");
+//
+//				buffer1.remove();
+//				System.out.println("CPU1 consumio");
+//
+//				while(monitor.shoot(1) == -1){
+//					/**
+//					 * Si le devuelve un -1 significa que no pudó hacer el disparo y que tiene que volver a esperar un tiempo aleatorio para hacerlo
+//					 * Espera un tiempo aleatorio entre 10-50 milisegundos y vuelve a intentar.
+//					 * Y así hasta que consigue hacerlo dentro del rango deseado.
+//					 */
+//
+//					try {
+//						long choose = (long) (Math.random()*50 +10);
+//
+//						sleep(choose);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
 
 	          }
 	        }
