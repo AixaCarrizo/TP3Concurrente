@@ -191,7 +191,7 @@ public class Monitor {
 //			return index;
 			
 		//CPU1
-			case 15:
+			//case 15:
 		case 12://CPU1 quiere pasar a atender una tarea
 //
 //			if(!pn.isPos(index)) {//si no pudo hacer el disparo, prende el cpu1
@@ -221,15 +221,41 @@ public class Monitor {
 	    	
 
 	    
-		//case 13:
+		case 13:
+			if(pn.isPos(index)){
+				System.out.println("Pude hacer el 13");
+				lock.unlock();
+				return 0;
+
+			}else{
+				System.out.println("No puedo hacer el 13, intento el 12");
+
+				if(pn.isPos(12)){
+
+					System.out.println("puedo hacer el 12");
+
+					lock.unlock();
+					return 0;
+
+				} else{
+					System.out.println("No pudo hacer 12");
+
+					lock.unlock();
+					return 0;
+				}
+
+
+			}
+
+
 
 		//CPU1
 		case 14://CPU1 intenta prenderse
 			if(pn.isPos(index)) {//si pudo disparar t6
 				pn.isPos(3); //dispara power_up_delay
-				pn.isPos(13);//y t5
+				//pn.isPos(13);//y t5
 
-				System.out.println("Hice los disparos 14, 3, 13. ");
+				System.out.println("Hice los disparos 14 y 3");
 
 				lock.unlock();
 				return 1;

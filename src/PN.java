@@ -80,6 +80,8 @@ public class PN {
 
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
+        if(index==1 || index==2) return inhib(index);
+
         int[] mPrima = new int[m.length];
         System.out.println("Disparo"+index);
 
@@ -115,6 +117,11 @@ public class PN {
                 m[5] = 1;
                 break;
         }
+    }
 
+    public boolean inhib(int index){
+
+        if(index==1) return  (m[0]==0 && m[2]==0);
+        else return (m[1] == 0 && m[3]==0);
     }
 }

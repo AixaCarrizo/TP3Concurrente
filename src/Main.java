@@ -14,19 +14,19 @@ public class Main{
 
 
 
-        System.out.println(monitor.pn.isPos(0));//TRUE
-        System.out.println(monitor.pn.isPos(14));//FALSE
-        System.out.println(monitor.pn.isPos(7));//TRUE
-        System.out.println(monitor.pn.isPos(11));//FALSE
-        System.out.println(monitor.pn.isPos(14));//TRUE
-        System.out.println(monitor.pn.isPos(3));//TRUE
-        System.out.println(monitor.pn.isPos(14));//FALSE
-        System.out.println(monitor.pn.isPos(12));//TRUE
-        System.out.println(monitor.pn.isPos(1));//TRUE
-        System.out.println(monitor.pn.isPos(12));//FALSE
-        System.out.println(monitor.pn.isPos(14));//TRUE
-        System.out.println(monitor.pn.isPos(3));//TRUE
-        System.out.println(monitor.pn.isPos(12));//FALSE
+//        System.out.println(monitor.pn.isPos(0));//TRUE
+//        System.out.println(monitor.pn.isPos(14));//FALSE
+//        System.out.println(monitor.pn.isPos(7));//TRUE
+//        System.out.println(monitor.pn.isPos(11));//FALSE
+//        System.out.println(monitor.pn.isPos(14));//TRUE
+//        System.out.println(monitor.pn.isPos(3));//TRUE
+//        System.out.println(monitor.pn.isPos(14));//FALSE
+//        System.out.println(monitor.pn.isPos(12));//TRUE
+//        System.out.println(monitor.pn.isPos(1));//TRUE
+//        System.out.println(monitor.pn.isPos(12));//FALSE
+//        System.out.println(monitor.pn.isPos(14));//TRUE
+//        System.out.println(monitor.pn.isPos(3));//TRUE
+//        System.out.println(monitor.pn.isPos(12));//FALSE
 
 
 

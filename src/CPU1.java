@@ -19,8 +19,16 @@ public class CPU1 extends Thread{
 	        	while(monitor.shoot(14)==-1);
 	        	System.out.println("monitor disparo T6 y esta en modo ON");
 
+	        	while(monitor.shoot(13)==0);
+
+
+
+
+
+
+
 				do{
-					monitor.shoot(12);
+					monitor.shoot(13);
 
 				}while (monitor.shoot(1) == -1);
 
