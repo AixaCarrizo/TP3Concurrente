@@ -4,7 +4,6 @@ public class PN {
     int[]m;
     int[][] w;
 
-
     public PN(int[] m, int[][] w, int[] s) {
         this.m = m;
         this.w = w;
@@ -80,8 +79,6 @@ public class PN {
 
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
-        if(index==1 || index==2) return inhib(index);
-
         int[] mPrima = new int[m.length];
         System.out.println("Disparo"+index);
 
@@ -91,7 +88,8 @@ public class PN {
 
             if (mPrima[i] < 0) return false;
         }
-        this.m=mPrima;
+
+        if(inhib(index)) this.m=mPrima;
 
         reload(index);
 
@@ -121,7 +119,7 @@ public class PN {
 
     public boolean inhib(int index){
 
-        if(index==1) return  (m[0]==0 && m[2]==0);
-        else return (m[1] == 0 && m[3]==0);
+        if(index==1) return  (m[0]==0 && m[2]==0);  //Si la transicion no esta inhibida
+        else if(index==2) return (m[1] == 0 && m[3]==0); else return true;
     }
 }

@@ -52,32 +52,44 @@ public class Monitor {
     		return 0;
 
     	//CPU1
-    	case 1://CPU1 intenta apagarse
-    		if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
-			{
-//				if(windowsTimer(1)) { //Le deja disparar la transicion temporal ServiceRate1
-//					pn.isPos(5);
-//					pn.isPos(index);
-//					lock.unlock();
-//					return 0;
-//				}
+			case 1:
+				if(pn.isPos(index)){
+					System.out.println("Pude hacer el disparo 1");
+					lock.unlock();
+					return 0;
+				} else{
+					System.out.println("Esta inhibida");
+					lock.unlock();
+					return 0;
+				}
 
-				pn.isPos(5);
-
-				System.out.println("Hice disparo 5");
-
-				//Si llegó acá entonces es que no le dejó hacer el disparo.
-				lock.unlock();
-				return -1;
-			}
-			else {
-				pn.isPos(index);//puede apagarse
-
-				System.out.println("Hice disparo 1");
-
-				lock.unlock();
-				return 0;
-			}
+//
+//    	case 1://CPU1 intenta apagarse
+//    		if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
+//			{
+////				if(windowsTimer(1)) { //Le deja disparar la transicion temporal ServiceRate1
+////					pn.isPos(5);
+////					pn.isPos(index);
+////					lock.unlock();
+////					return 0;
+////				}
+//
+//				pn.isPos(5);
+//
+//				System.out.println("Hice disparo 5");
+//
+//				//Si llegó acá entonces es que no le dejó hacer el disparo.
+//				lock.unlock();
+//				return -1;
+//			}
+//			else {
+//				pn.isPos(index);//puede apagarse
+//
+//				System.out.println("Hice disparo 1");
+//
+//				lock.unlock();
+//				return 0;
+//			}
     		
     	//CPU2	
 		case 2://CPU2 intenta apagarse
@@ -218,9 +230,8 @@ public class Monitor {
 				lock.unlock();
 				return -1;
 	    	}
-	    	
 
-	    
+
 		case 13:
 			if(pn.isPos(index)){
 				System.out.println("Pude hacer el 13");
@@ -243,8 +254,6 @@ public class Monitor {
 					lock.unlock();
 					return 0;
 				}
-
-
 			}
 
 
