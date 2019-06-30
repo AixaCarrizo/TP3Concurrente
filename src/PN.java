@@ -8,8 +8,6 @@ public class PN {
     int[][] w;
     int [][] h;
 
-
-
     public PN(int[] m, int[][] w, int[] s, int[][]h, int[] B) {
         this.m = m;
         this.w = w;
