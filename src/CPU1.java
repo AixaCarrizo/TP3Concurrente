@@ -20,7 +20,9 @@ public class CPU1 extends Thread{
 	        	System.out.println("monitor disparo T14");
 	        		
 	        	
-				monitor.shoot(12);
+				while(monitor.shoot(12)==0) {
+				System.out.println("monitor intento disparar T12");	
+				}
 				System.out.println("monitor disparo T12");	
 				buffer1.remove();
 				System.out.println("CPU1 consumio");

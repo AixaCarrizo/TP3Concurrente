@@ -2,12 +2,19 @@
 public class PN {
 
     int[]m;
+    int []q;
+    int []B;
+    int [] sensib;
     int[][] w;
+    int [][] h;
 
 
-    public PN(int[] m, int[][] w, int[] s) {
+
+    public PN(int[] m, int[][] w, int[] s, int[][]h, int[] B) {
         this.m = m;
         this.w = w;
+        this.h = h;
+        this.B = B;
 
     }
 
@@ -18,7 +25,7 @@ public class PN {
     public void init(){
 
         this.m = new int[]{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1}; //Vector de marcado inicial
-
+        this.q = new int[]{0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1}; //qi = cero ( M ( pi ) ), 0 si M(pi) != 0, en otro caso, 1
         /**
          * m0: Active
          * m1: Active_2
@@ -59,28 +66,75 @@ public class PN {
          * T15:t8
          */
 
-        this.w = new int[][]{{0 , 0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0},		// 0	Active
-                             {0 , 0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0 , 0,  1},		// 1	Active_2
-                             {0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1, -1,  0,  0,  0},		// 2	CPU_buffer1
-                             {0 , 0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, -1},		// 3	CPU_buffer2
-                             {0 ,-1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 4	CPU_ON
-                             {0 , 0, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 5	CPU_ON_2
-                             {0 , 0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0},		// 6	Idle
-                             {0 , 0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0, -1},		// 7	Idle_2
+        this.w = new int[][]{{0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0},		// 0	Active
+                             {0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  1},		// 1	Active_2
+                             {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1, -1,  0,  0,  0},		// 2	CPU_buffer1
+                             {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, -1},		// 3	CPU_buffer2
+                             {0, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 4	CPU_ON
+                             {0,  0, -1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 5	CPU_ON_2
+                             {0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0},		// 6	Idle
+                             {0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0, -1},		// 7	Idle_2
                              {-1, 0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0},		// 8	P0
-                             {1 , 0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0},		// 9	P1
-                             {0 , 0,  0,  0, -1,  0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0},		// 10	P13
-                             {0 , 0,  0,  0,  0,  0,  0,  1,  0,  0, -1, -1,  0,  0,  0,  0},		// 11	P16
-                             {0 , 0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  0,  0},		// 12	P6
-                             {0 , 0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0},		// 13	Power_up
-                             {0 , 0,  0,  0, -1,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},		// 14	Power_up_2
-                             {0 , 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0},		// 15	Stand_by
-                             {0 , 0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0}};		// 16	Stand_by_2
+                             {1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0},		// 9	P1
+                             {0,  0,  0,  0, -1,  0,  0,  1, -1,  0,  0,  0,  0,  0,  0,  0},		// 10	P13
+                             {0,  0,  0,  0,  0,  0,  0,  1,  0,  0, -1, -1,  0,  0,  0,  0},		// 11	P16
+                             {0,  0,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0, -1,  0,  0},		// 12	P6
+                             {0,  0,  0, -1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0},		// 13	Power_up
+                             {0,  0,  0,  0, -1,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},		// 14	Power_up_2
+                             {0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0},		// 15	Stand_by
+                             {0,  0,  1,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,  0,  0,  0}};		// 16	Stand_by_2
+                             
+                             
+        this.h = new int[][]{{0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 0	Active
+           					 {0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 1	Active_2
+           					 {0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 2	CPU_buffer1
+           					 {0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 3	CPU_buffer2
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 4	CPU_ON
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 5	CPU_ON_2
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 6	Idle
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 7	Idle_2
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 8	P0
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 9	P1
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 10	P13
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 11	P16
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 12	P6
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 13	Power_up
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 14	Power_up_2
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},		// 15	Stand_by
+           					 {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}};		// 16	Stand_by_2
+           				
+       this.B = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+       
+       
+       calcularB();
+       
+       for(int i = 0; i <16; i++) {
+           sensib[i] = this.m[i] * this.B[i];	
+           }
+       
+        
     }
+    
+    public void calcularB() {
+    	int acum=0;   					 
+        for (int i=0; i < 16; i++) {
+        	for(int j=0; j <17; i++) {
+        		acum = acum + ( h[i][j] * q[i]);
+        	}
+        	this.B[i]=acum;
+        	acum = 0;
+        }
+    }
+    
+    
 
     public boolean isPos(int index) {   //Mediante la ecuacion de la PN devuelve un boolean que indica si se puede disparar la transicion
 
         int[] mPrima = new int[m.length];
+        
+        if(this.sensib[index] == 0) { //si la trans no esta sensibilizada, devuelve false, sino, calcula si puede hacer la transic.	
+        	return false;
+        }
 
         for (int i = 0; i < m.length; i++) {   //Si algun numero del nuevo vector de marcado es negativo, no puedo dispararla
             mPrima[i] = m[i] + w[i][index];    //Sumo para obtener el nuevo vector de marcado
@@ -89,7 +143,20 @@ public class PN {
         }
 
         this.m=mPrima;
-
+        for(int i=0; i<this.q.length; i++) {
+        	if(this.m[i] == 0) {
+        		this.q[i] = 0; 
+        	}
+        	else {
+        		this.q[i] = 1;
+        	}
+        }
+        
+        calcularB();
+        
+        for(int i = 0; i <16; i++) {
+        sensib[i] = this.m[i] * this.B[i];	
+        }
         return true;   //Si ninguno es negativo, puedo dispararla
     }
 }

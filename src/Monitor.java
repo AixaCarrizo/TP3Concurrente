@@ -48,7 +48,7 @@ public class Monitor {
     	case 0:
     		pn.isPos(index);
     		lock.unlock();
-    		return 0;
+    		break;
     	//CPU1
     	case 1://CPU1 intenta apagarse
     		if ((pn.m[0]!=0)||(pn.m[2]!=0))//pero tiene tareas o en el buffer
@@ -57,7 +57,6 @@ public class Monitor {
 					pn.isPos(5);
 					pn.isPos(index);
 					lock.unlock();
-					return 0;
 				}
 
 				//Si llegó acá entonces es que no le dejó hacer el disparo.
@@ -67,8 +66,8 @@ public class Monitor {
 			else {
 				pn.isPos(index);//puede apagarse
 				lock.unlock();
-				return 0;
 			}
+    		break;
     		
     	//CPU2	
 		case 2://CPU2 intenta apagarse
@@ -78,7 +77,6 @@ public class Monitor {
 						pn.isPos(6);
 						pn.isPos(index);
 						lock.unlock();
-						return 0;
 					}
 
 					lock.unlock();
@@ -87,22 +85,24 @@ public class Monitor {
 				else {
 					pn.isPos(index);//puede apagarse
 					lock.unlock();
-					return 0;
 				}
-		case 3:
-		case 4:
-		case 5:
-		case 6:
+				break;
+				
+		case 3:break;
+		case 4:break;
+		case 5:break;
+		case 6:break;
 		
 		
 		case 7:
+			//System.out.println("holi");
 			pn.isPos(index);
 			noTaskAvailable.signalAll();
 			System.out.println("Signal task");
 			lock.unlock();
-			return 0;
+			break;
     		
-		case 8:
+		case 8: break;
 			
 		//CPU2
 		case 9: //CPU2 intenta prenderse
@@ -119,7 +119,7 @@ public class Monitor {
 					}
 	    		}
 	    	lock.unlock();
-	    	return 0;
+	    	break;
 			
 		//ASIGNADOR	
 		case 10://esto esta como medio al vicio porque el asignador siempre intenta hacer T11 y hacen lo mismo
@@ -158,11 +158,11 @@ public class Monitor {
 			if(!pn.isPos(index)) {//si no pudo hacer el disparo, prende el cpu1
 	    		this.shoot(14);//prende el CPU
 	    	}
-	    	if(pn.isPos(12)) {//intenta disparar la transicion de nuevo
+	    	if(pn.isPos(index)) {//intenta disparar la transicion de nuevo
 	    		this.windowsTimer(1);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
 
 	    		lock.unlock();
-	    		return 0;
+	    		return 1;
 	    	}
 	    	else {//si de nuevo no pudo, es porque no hay nada en el buffer
 	    		try {
@@ -175,13 +175,14 @@ public class Monitor {
 	    	}
 	    	
 	    	lock.unlock();
-	    	return 0;
+	    	break;
 	    
 		case 13:
 			
 		//CPU1
 		case 14://CPU1 intenta prenderse
 			if(pn.isPos(index)) {//si pudo disparar t6
+				//System.out.println("why r u like this?");
 				pn.isPos(3); //dispara power_up_delay
 				pn.isPos(13);//y t5
 				lock.unlock();
@@ -195,7 +196,7 @@ public class Monitor {
 					e.printStackTrace();
 				}
 				lock.unlock();
-	    		return 0;
+	    		break;
 			}
 			
 			
@@ -225,7 +226,7 @@ public class Monitor {
 	    		this.windowsTimer(2);	//Pudo hacerT T2, por lo que ahora hay un tocken en la plaza Active, tiene que empezar a contar para sensibilizar ServiceRate1
 
 	    		lock.unlock();
-	    		return 0;
+	    		return 1;
 	    	}
 	    	else {
 	    		try {
@@ -237,7 +238,7 @@ public class Monitor {
 	    	}
 	    	
 	    	lock.unlock();
-	    	return 0;
+	    	break;
 			
 			
 			
